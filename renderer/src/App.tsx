@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import GlobalStyles from './components/GlobalStyles';
-import HomePage from './components/HomePage';
-import TopicPage from './components/TopicPage';
-import { algorithmTopics } from './components/algorithmTopics';
+import { GlobalStyles } from './components/GlobalStyles';
+import { HomePage } from './components/HomePage';
+import { TopicPage } from './components/TopicPage';
 
 const App = () => {
     const [selectedTopic, setSelectedTopic] = useState(null);
@@ -18,4 +17,4 @@ const App = () => {
     );
 };
 
-export default App; 
+export default App;
