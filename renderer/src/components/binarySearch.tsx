@@ -1,48 +1,40 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Lightbulb, Beaker, BarChart3, Target, AlertTriangle, Cpu } from 'lucide-react';
+import { Lightbulb, Beaker, BarChart3, Target, AlertTriangle, Cpu, ArrowDown } from 'lucide-react';
 import { SectionHeading, Prose, DefinitionBox, ComplexityBox, ApplicationsBox, DisadvantagesBox, RetroCodeBlock, Controls, EnhancedChart } from './ui';
 
-const BinarySearchVisualization = ({ array, left, right, mid, foundIndex, comparing, target }) => {
+const BinarySearchVisualization = ({ array, left, right, mid, foundIndex, comparing, onUpdateArray }) => {
+    const handleValueChange = (e, index, delta) => {
+        e.preventDefault();
+        const newArray = [...array];
+        newArray[index] = Math.max(0, newArray[index] + delta);
+        onUpdateArray(newArray.sort((a,b) => a - b));
+    };
+
     return (
-        <div className="p-6 rounded-lg bg-secondary/30 border border-border font-mono text-center">
-            <div className="mb-4">
-                <span className="font-bold">arr = </span>
-                <span className="text-muted-foreground">[{array.join(', ')}]</span>
-                <span className="font-bold ml-6">target = </span>
-                <span className="text-muted-foreground">{target}</span>
+        <div className="relative inline-flex flex-col items-center">
+            <div className="flex pl-12">
+                {array.map((num, idx) => (
+                    <div key={idx} className="w-12 text-center text-sm text-var(--text-secondary)">{idx}</div>
+                ))}
             </div>
-            <div className="relative inline-flex flex-col items-center p-4 bg-background rounded-md border border-border">
-                <div className="flex">
-                    {array.map((num, idx) => (
-                        <div key={idx} className="w-12 text-center text-xs text-muted-foreground">{idx}</div>
-                    ))}
+            <div className="flex items-center">
+                <div className="flex flex-col items-center mr-2">
+                    <ArrowDown size={16}/>
+                    <span className="font-serif text-2xl">arr:</span>
                 </div>
-                <div className="flex rounded-md overflow-hidden border-2 border-border">
+                <div className="flex border-t-2 border-l-2 border-gray-400">
                     {array.map((num, idx) => {
-                        const isInRange = idx >= left && idx <= right;
-                        const isMid = idx === mid;
-                        const isFound = idx === foundIndex;
-                        
-                        let cellClasses = 'w-12 h-12 flex items-center justify-center text-2xl font-serif transition-all duration-300 ';
-                        
-                        if (isFound) {
-                            cellClasses += 'bg-success text-white scale-110';
-                        } else if (isMid && comparing) {
-                            cellClasses += 'bg-warning text-black scale-110';
-                        } else if (isInRange) {
-                            cellClasses += 'bg-secondary';
-                        } else {
-                            cellClasses += 'bg-muted/30 text-muted-foreground opacity-50';
-                        }
-                        
-                        return <div key={idx} className={cellClasses}>{num}</div>;
+                        let cellClasses = 'w-12 h-12 flex items-center justify-center border-b-2 border-r-2 border-gray-400 text-2xl font-serif cursor-pointer ';
+                        if (idx === foundIndex) cellClasses += 'bg-var(--success-color) text-white';
+                        else if (idx === mid && comparing) cellClasses += 'bg-var(--warning-color) text-white';
+                        else cellClasses += 'bg-white';
+                        return <div key={`${idx}-${num}`} className={cellClasses} onClick={(e) => handleValueChange(e, idx, 1)} onContextMenu={(e) => handleValueChange(e, idx, -1)}>{num}</div>;
                     })}
                 </div>
-                <div className="relative h-8 w-full mt-2 font-bold text-sm">
-                    {left !== null && <div className="absolute text-center text-success" style={{left: `${left * 48}px`, width: '48px'}}>L</div>}
-                    {right !== null && <div className="absolute text-center text-danger" style={{left: `${right * 48}px`, width: '48px'}}>R</div>}
-                    {mid !== null && <div className="absolute text-center text-warning" style={{left: `${mid * 48}px`, width: '48px', top: '-5.5rem'}}>mid</div>}
-                </div>
+            </div>
+            <div className="relative h-6 w-full mt-1 pl-12">
+                {left !== null && <div className="absolute text-green-600 font-bold" style={{left: `${left * 48 + 24}px`, transform: 'translateX(-50%)'}}>L</div>}
+                {right !== null && <div className="absolute text-red-600 font-bold" style={{left: `${right * 48 + 24}px`, transform: 'translateX(-50%)'}}>R</div>}
             </div>
         </div>
     );
@@ -54,7 +46,6 @@ const BinarySearchInteractive = () => {
     const [speed, setSpeed] = useState(1500);
     const [array, setArray] = useState([2, 5, 8, 12, 16, 23, 38, 45, 56, 67, 78]);
     const [target, setTarget] = useState(23);
-    const [arrayInput, setArrayInput] = useState(array.join(', '));
     const [targetInput, setTargetInput] = useState(target.toString());
 
     const steps = useMemo(() => {
@@ -63,21 +54,21 @@ const BinarySearchInteractive = () => {
         generatedSteps.push({ left: l, right: r, mid: null, foundIndex: -1, line: 2, description: `Initialize pointers: left = ${l}, right = ${r}`, comparing: false });
         while (l <= r) {
             let m = Math.floor((l + r) / 2);
-            generatedSteps.push({ left: l, right: r, mid: m, foundIndex: -1, line: 4, description: `Calculate midpoint: mid = floor((${l} + ${r}) / 2) = ${m}`, comparing: false });
-            generatedSteps.push({ left: l, right: r, mid: m, foundIndex: -1, line: 5, description: `Compare array[mid] (which is ${array[m]}) with target (${target})`, comparing: true });
+            generatedSteps.push({ left: l, right: r, mid: m, foundIndex: -1, line: 4, description: `Calculate midpoint: mid = ${m}`, comparing: false });
+            generatedSteps.push({ left: l, right: r, mid: m, foundIndex: -1, line: 5, description: `Compare: arr[${m}] (${array[m]}) with target (${target})`, comparing: true });
             if (array[m] === target) {
-                generatedSteps.push({ left: l, right: r, mid: m, foundIndex: m, line: 6, description: `Element found at index ${m}.`, comparing: false });
+                generatedSteps.push({ left: l, right: r, mid: m, foundIndex: m, line: 6, description: `Found! Target ${target} is at index ${m}.`, comparing: false });
                 break;
             } else if (array[m] < target) {
-                generatedSteps.push({ left: l, right: r, mid: m, foundIndex: -1, line: 8, description: `${array[m]} < ${target}. The target must be in the right half. Updating left pointer.`, comparing: false });
+                generatedSteps.push({ left: l, right: r, mid: m, foundIndex: -1, line: 8, description: `${array[m]} < ${target}, search right half.`, comparing: false });
                 l = m + 1;
             } else {
-                generatedSteps.push({ left: l, right: r, mid: m, foundIndex: -1, line: 10, description: `${array[m]} > ${target}. The target must be in the left half. Updating right pointer.`, comparing: false });
+                generatedSteps.push({ left: l, right: r, mid: m, foundIndex: -1, line: 10, description: `${array[m]} > ${target}, search left half.`, comparing: false });
                 r = m - 1;
             }
         }
-        if (l > r && (steps[steps.length - 1]?.foundIndex === -1)) {
-            generatedSteps.push({ left: l, right: r, mid: null, foundIndex: -1, line: 11, description: `Search space is empty (left > right). Target not found.`, comparing: false });
+        if (l > r && (generatedSteps.length === 0 || generatedSteps[generatedSteps.length - 1].foundIndex === -1)) {
+            generatedSteps.push({ left: l, right: r, mid: null, foundIndex: -1, line: 11, description: `Search space exhausted. Target not found.`, comparing: false });
         }
         return generatedSteps;
     }, [array, target]);
@@ -93,24 +84,18 @@ const BinarySearchInteractive = () => {
         return () => clearInterval(interval);
     }, [isPlaying, currentStep, speed, steps.length]);
 
-    const reset = () => { 
-        setIsPlaying(false); 
-        setCurrentStep(0); 
-        const newArr = arrayInput.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)).sort((a,b) => a-b);
-        setArray(newArr);
-        setTarget(parseInt(targetInput));
-    };
+    const reset = () => { setIsPlaying(false); setCurrentStep(0); };
     const goToStep = (step) => { setIsPlaying(false); setCurrentStep(Math.max(0, Math.min(steps.length - 1, step))); };
     const isFinished = currentStep >= steps.length - 1;
 
     const getCodeLines = (vars) => {
         const { left, right, mid, target } = vars;
-        const Var = ({val}) => <span className="text-primary font-bold">{val}</span>;
+        const Var = ({val}) => <span className="text-var(--highlight-primary) font-bold">{val}</span>;
         return [
-            <React.Fragment key="line1">def binary_search(arr, target=<Var val={target}/>):</React.Fragment>,
-            <React.Fragment key="line2">    left, right = 0, len(arr) - 1</React.Fragment>,
+            <React.Fragment key="line1">def binary_search(arr, target:<Var val={target}/>):</React.Fragment>,
+            <React.Fragment key="line2">    left:<Var val={left}/>, right:<Var val={right}/> = 0, len(arr) - 1</React.Fragment>,
             <React.Fragment key="line3">    while left {'<='} right:</React.Fragment>,
-            <React.Fragment key="line4">        mid = (left + right) // 2</React.Fragment>,
+            <React.Fragment key="line4">        mid:<Var val={mid ?? '?' }/> = (left + right) // 2</React.Fragment>,
             <React.Fragment key="line5">        if arr[mid] == target:</React.Fragment>,
             <React.Fragment key="line6">            return mid</React.Fragment>,
             <React.Fragment key="line7">        elif arr[mid] {'<'} target:</React.Fragment>,
@@ -122,50 +107,53 @@ const BinarySearchInteractive = () => {
     };
 
     const StackCard = ({ variables }) => (
-        <div className="bg-secondary/30 h-full rounded-r-lg">
-            <div className="flex items-center justify-between p-3 border-b border-border">
-                <span className="font-bold flex items-center gap-2"><Cpu size={16}/> State</span>
+        <div className="bg-var(--bg-primary) h-full">
+            <div className="flex items-center justify-between p-2 border-b-2 border-var(--border-color)">
+                <span className="font-bold uppercase flex items-center gap-2"><Cpu size={16}/> Stack Card</span>
             </div>
-            <div className="p-4 space-y-2 text-sm font-mono">
-                <p>left: <span className="font-bold text-success">{variables.left}</span></p>
-                <p>right: <span className="font-bold text-danger">{variables.right}</span></p>
-                <p>mid: <span className="font-bold text-warning">{variables.mid ?? 'null'}</span></p>
+            <div className="p-4 space-y-1 text-sm">
+                <p>target: <span className="font-bold text-var(--highlight-primary)">{variables.target}</span></p>
+                <p>left: <span className="font-bold text-var(--highlight-primary)">{variables.left}</span></p>
+                <p>right: <span className="font-bold text-var(--highlight-primary)">{variables.right}</span></p>
+                <p>mid: <span className="font-bold text-var(--highlight-primary)">{variables.mid ?? 'null'}</span></p>
             </div>
         </div>
     );
     
     return (
-        <div className="my-8 rounded-lg border border-border p-4 space-y-6">
-            <div>
-                <h3 className="font-bold text-lg">Parameters</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                    <input type="text" value={arrayInput} onChange={e => setArrayInput(e.target.value)} onBlur={reset} className="w-full bg-background border border-input rounded-md p-2 font-mono text-sm" placeholder="Comma-separated numbers..." />
-                    <input type="text" value={targetInput} onChange={e => setTargetInput(e.target.value)} onBlur={reset} className="w-full bg-background border border-input rounded-md p-2 font-mono text-sm" placeholder="Target value..." />
+        <div className="my-8">
+            <div className="p-4 retro-border bg-var(--bg-secondary) flex justify-between items-end">
+                <div className="overflow-x-auto">
+                    <BinarySearchVisualization array={array} left={left} right={right} mid={mid} foundIndex={foundIndex} comparing={comparing} onUpdateArray={setArray} />
+                </div>
+                <div className="text-right ml-8">
+                    <label className="block text-sm font-bold uppercase tracking-wide mb-1">Target Value</label>
+                    <input type="text" value={targetInput} onChange={e => setTargetInput(e.target.value)} onBlur={() => { setTarget(Number(targetInput)); reset(); }} className="w-32 bg-var(--bg-primary) retro-border p-2 font-mono text-sm text-center" placeholder="Target..." />
                 </div>
             </div>
             
-            <BinarySearchVisualization array={array} left={left} right={right} mid={mid} foundIndex={foundIndex} comparing={comparing} target={target} />
-            
-            <div className="flex rounded-lg border border-border">
+            <div className="mt-6 flex retro-border">
                 <div className="w-4/5">
                     <RetroCodeBlock title="Execution" highlightLines={[line]}>{getCodeLines({left, right, mid, target})}</RetroCodeBlock>
                 </div>
-                <div className="w-1/5 border-l border-border">
+                <div className="w-1/5 border-l-2 border-var(--border-color)">
                     <StackCard variables={{left, right, mid, target}}/>
                 </div>
             </div>
-            <div className="p-4 bg-secondary/30 rounded-lg border border-border">
-                <h3 className="font-bold text-lg mb-2">Explanation</h3>
-                <p className="font-serif text-lg text-muted-foreground h-12">{description}</p>
+             <div className="retro-border mt-[-2px] border-t-0">
+                <Controls isPlaying={isPlaying} isFinished={isFinished} onPlayPause={() => setIsPlaying(!isPlaying)} onReset={reset} onStepBack={() => goToStep(currentStep - 1)} onStepForward={() => goToStep(currentStep + 1)} onSpeedChange={setSpeed} speed={speed} currentStep={currentStep} totalSteps={steps.length} />
             </div>
-            <Controls isPlaying={isPlaying} isFinished={isFinished} onPlayPause={() => setIsPlaying(!isPlaying)} onReset={reset} onStepBack={() => goToStep(currentStep - 1)} onStepForward={() => goToStep(currentStep + 1)} onSpeedChange={setSpeed} speed={speed} currentStep={currentStep} totalSteps={steps.length} />
+            <div className="mt-6 retro-border p-4 bg-var(--bg-secondary)">
+                <h3 className="font-bold text-lg uppercase mb-2">Explanation</h3>
+                <p className="font-serif text-lg">{description}</p>
+            </div>
         </div>
     );
 };
 
 export const BinarySearchContent = ({ topic }) => (
     <>
-        <SectionHeading title="Binary Search" id="introduction" icon={Lightbulb} />
+        <SectionHeading title="01. Binary Search" id="introduction" icon={Lightbulb} />
         <Prose>
              <p>Binary search is a quintessential divide-and-conquer algorithm. Its efficiency makes it a cornerstone of computer science, ideal for rapidly locating an element within a <strong>sorted</strong> array. The core principle is to eliminate half of the remaining search space with each comparison.</p>
         </Prose>
@@ -183,7 +171,7 @@ export const BinarySearchContent = ({ topic }) => (
         />
         <EnhancedChart 
             data={useMemo(() => Array.from({length: 51}, (_, i) => ({ n: i * 20, 'Linear O(n)': i * 20, 'Binary O(log n)': i * 20 > 0 ? Math.log2(i * 20) : 0 })), [])}
-            lines={[ { dataKey: 'Linear O(n)', name: 'Linear Search', color: 'hsl(var(--danger))' }, { dataKey: 'Binary O(log n)', name: 'Binary Search', color: 'hsl(var(--success))' } ]}
+            lines={[ { dataKey: 'Linear O(n)', name: 'Linear Search', color: '#DC2626' }, { dataKey: 'Binary O(log n)', name: 'Binary Search', color: 'var(--success-color)' } ]}
             title="Search Algorithm Comparison" subtitle="Time complexity growth: Linear vs. Logarithmic" inputLabel="Array Size (n)"
         />
         <SectionHeading title="Applications" id="use-cases" icon={Target} />
