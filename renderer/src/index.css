@@ -1,26 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Fira+Code:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html {
-    font-family: 'Inter', system-ui, sans-serif;
+  :root {
+    --background: 39 77% 95%;
+    --foreground: 38 21% 21%;
+    --card: 39 64% 91%;
+    --card-foreground: 38 21% 21%;
+    --popover: 39 77% 95%;
+    --popover-foreground: 38 21% 21%;
+    --primary: 215 39% 48%;
+    --primary-foreground: 39 77% 95%;
+    --secondary: 39 28% 93%;
+    --secondary-foreground: 38 21% 21%;
+    --muted: 39 28% 93%;
+    --muted-foreground: 38 10% 45%;
+    --accent: 215 39% 48%;
+    --accent-foreground: 39 77% 95%;
+    --border: 39 28% 88%;
+    --input: 39 28% 88%;
+    --ring: 215 39% 48%;
+    --success: 141 50% 45%;
+    --warning: 38 92% 50%;
+    --danger: 0 72% 51%;
   }
-  
-  
-}
 
-@layer components {
-  .glass-card {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl;
+  .dark {
+    --background: 220 18% 12%;
+    --foreground: 39 28% 93%;
+    --card: 220 18% 15%;
+    --card-foreground: 39 28% 93%;
+    --popover: 220 18% 12%;
+    --popover-foreground: 39 28% 93%;
+    --primary: 215 39% 68%;
+    --primary-foreground: 220 18% 12%;
+    --secondary: 220 18% 18%;
+    --secondary-foreground: 39 28% 93%;
+    --muted: 220 18% 18%;
+    --muted-foreground: 39 10% 65%;
+    --accent: 215 39% 68%;
+    --accent-foreground: 220 18% 12%;
+    --border: 220 18% 22%;
+    --input: 220 18% 22%;
+    --ring: 215 39% 68%;
+    --success: 141 50% 55%;
+    --warning: 38 92% 60%;
+    --danger: 0 72% 61%;
   }
   
-  .btn-primary {
-    @apply bg-white/20 hover:bg-white/30 border border-white/30 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg;
-  }
-  
-  .btn-secondary {
-    @apply bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300;
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
   }
 } 
