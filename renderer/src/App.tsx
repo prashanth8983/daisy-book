@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { HomePage } from './components/HomePage';
 import { TopicPage } from './components/TopicPage';
-import { GlobalStyles } from './components/GlobalStyles';
+import GlobalStyles from './components/GlobalStyles';
 import { ThemeProvider } from './theme';
 
 const App = () => {
