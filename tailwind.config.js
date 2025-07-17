@@ -29,12 +29,13 @@ module.exports = {
         'danger': 'hsl(var(--danger))',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Source Serif 4', 'serif'],
+        sans: ['Lato', 'sans-serif'],
+        serif: ['Merriweather', 'serif'],
         mono: ['Fira Code', 'monospace'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out forwards',
+        'fade-in-up': 'fadeInUp 0.5s ease-in-out forwards',
         'slide-up': 'slideUp 0.5s ease-out forwards',
         'slide-down': 'slideDown 0.5s ease-out forwards',
       },
@@ -42,6 +43,10 @@ module.exports = {
         fadeIn: {
           'from': { opacity: '0' },
           'to': { opacity: '1' },
+        },
+        fadeInUp: {
+          'from': { opacity: '0', transform: 'translateY(10px)' },
+          'to': { opacity: '1', transform: 'translateY(0)' },
         },
         slideUp: {
           'from': { transform: 'translateY(20px)', opacity: '0' },

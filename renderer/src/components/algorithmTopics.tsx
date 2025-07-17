@@ -2,6 +2,8 @@ import React from 'react';
 import { ArrayContent } from './topics/array';
 import { StringContent } from './topics/string';
 import { LinkedListContent } from './topics/linkedList';
+import { StackContent } from './topics/stack';
+import { QueueContent } from './topics/queue';
 import { HashContent } from './topics/hash';
 import { BinarySearchContent } from './topics/binarySearch';
 import { BubbleSortContent } from './topics/bubbleSort';
@@ -15,6 +17,7 @@ export const algorithmTopics = [
         description: 'A data structure consisting of a collection of elements, each identified by at least one array index or key.',
         sections: [
             { id: 'introduction', title: 'Introduction' },
+            { id: 'interactive-demo', title: 'Interactive Demo' },
             { id: 'complexity-analysis', title: 'Complexity Analysis' },
             { id: 'use-cases', title: 'Applications' },
             { id: 'disadvantages', title: 'Disadvantages' }
@@ -50,8 +53,38 @@ export const algorithmTopics = [
         content: (props) => <LinkedListContent {...props} />
     },
     {
-        id: 'hash-table',
+        id: 'stack',
         chapter: '1.4',
+        title: 'Stack',
+        tags: ['📦 Data Structure', 'LIFO'],
+        description: 'A linear data structure that follows the LIFO (Last-In, First-Out) principle.',
+        sections: [
+            { id: 'introduction', title: 'Introduction' },
+            { id: 'interactive-demo', title: 'Interactive Demo' },
+            { id: 'complexity-analysis', title: 'Complexity Analysis' },
+            { id: 'use-cases', title: 'Applications' },
+            { id: 'disadvantages', title: 'Disadvantages' }
+        ],
+        content: (props) => <StackContent {...props} />
+    },
+    {
+        id: 'queue',
+        chapter: '1.5',
+        title: 'Queue',
+        tags: ['📦 Data Structure', 'FIFO'],
+        description: 'A linear data structure that follows the FIFO (First-In, First-Out) principle.',
+        sections: [
+            { id: 'introduction', title: 'Introduction' },
+            { id: 'interactive-demo', title: 'Interactive Demo' },
+            { id: 'complexity-analysis', title: 'Complexity Analysis' },
+            { id: 'use-cases', title: 'Applications' },
+            { id: 'disadvantages', title: 'Disadvantages' }
+        ],
+        content: (props) => <QueueContent {...props} />
+    },
+    {
+        id: 'hash-table',
+        chapter: '1.6',
         title: 'Hash Table',
         tags: ['🔑 Data Structure', '🚀 Fast Lookups'],
         description: 'A data structure which stores data in an associative manner. In a hash table, data is stored in an array format, where each data value has its own unique index value.',
