@@ -3,25 +3,46 @@ import { Lightbulb, Beaker, BarChart3, Target, AlertTriangle, Cpu } from 'lucide
 import { SectionHeading, Prose, DefinitionBox, ComplexityBox, ApplicationsBox, DisadvantagesBox, RetroCodeBlock, Controls, EnhancedChart } from '../ui';
 
 const HeapArrayCell = ({ num, index, isComparing, isSwapping, isSorted, onUpdate }) => {
-    let cellClasses = 'w-12 h-12 flex items-center justify-center border-b-2 border-r-2 border-gray-400 text-2xl font-serif cursor-pointer ';
-    if (isSorted) cellClasses += 'bg-var(--success-color) text-white';
-    else if (isSwapping) cellClasses += 'bg-var(--highlight-primary) text-white transform -translate-y-2';
-    else if (isComparing) cellClasses += 'bg-var(--warning-color) text-white transform -translate-y-1';
-    else cellClasses += 'bg-white';
+    const [inputValue, setInputValue] = useState(num);
 
-    const handleClick = (e) => {
-        e.preventDefault();
-        if (e.type === 'click') { // left click
-            onUpdate(index, num + 1);
-        } else if (e.type === 'contextmenu') { // right click
-            onUpdate(index, num - 1);
+    useEffect(() => {
+        setInputValue(num);
+    }, [num]);
+
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleInputBlur = () => {
+        const newValue = parseInt(inputValue, 10);
+        if (!isNaN(newValue)) {
+            onUpdate(index, newValue);
         }
     };
-    
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleInputBlur();
+        }
+    };
+
+    let cellClasses = 'w-16 h-16 flex items-center justify-center text-2xl font-bold rounded-lg shadow-md transition-all duration-300 ease-in-out transform ';
+    if (isSorted) cellClasses += 'bg-gradient-to-br from-green-400 to-blue-500 text-white scale-110';
+    else if (isSwapping) cellClasses += 'bg-gradient-to-br from-purple-400 to-pink-500 text-white -translate-y-2 scale-110';
+    else if (isComparing) cellClasses += 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white scale-105';
+    else cellClasses += 'bg-white';
+
     return (
-        <div className="flex flex-col items-center">
-            <div className="text-sm text-var(--highlight-primary) h-6">{index}</div>
-            <div className={cellClasses} onClick={handleClick} onContextMenu={handleClick}>{num}</div>
+        <div className="flex flex-col items-center m-1">
+            <div className="text-sm text-gray-500 h-6">{index}</div>
+            <input 
+                type="text" 
+                value={inputValue} 
+                onChange={handleInputChange} 
+                onBlur={handleInputBlur}
+                onKeyPress={handleKeyPress}
+                className={`${cellClasses} text-center`}
+            />
         </div>
     );
 };
@@ -38,33 +59,55 @@ const HeapTree = ({ heap, comparing, swapping, sorted }) => {
         if (right < heap.length) edges.push({ from: i, to: right });
     }
 
+    const maxDepth = Math.floor(Math.log2(heap.length));
+    const width = Math.max(600, 2**(maxDepth) * 80);
+    const height = (maxDepth + 1) * 100;
+
     const getNodePosition = (index) => {
-        if (index === 0) return { x: 300, y: 50 };
         const level = Math.floor(Math.log2(index + 1));
         const indexInLevel = index - (2**level - 1);
-        const y = 50 + level * 80;
+        const y = 50 + level * 100;
         const totalNodesInLevel = 2**level;
-        const x = (600 / (totalNodesInLevel + 1)) * (indexInLevel + 1);
+        const x = (width / (totalNodesInLevel + 1)) * (indexInLevel + 1);
         return { x, y };
     };
 
     return (
-        <svg width="600" height="300" className="bg-var(--bg-secondary) retro-border p-4">
+        <svg width={width} height={height} className="bg-gray-50 rounded-lg shadow-inner p-4 mx-auto">
             {edges.map((edge, i) => {
                 const fromPos = getNodePosition(edge.from);
                 const toPos = getNodePosition(edge.to);
-                return <line key={i} x1={fromPos.x} y1={fromPos.y} x2={toPos.x} y2={toPos.y} stroke="var(--border-color)" strokeWidth="2" />;
+                return <line key={i} x1={fromPos.x} y1={fromPos.y} x2={toPos.x} y2={toPos.y} stroke="#cbd5e1" strokeWidth="3" />;
             })}
             {nodes.map(node => {
                 const { x, y } = getNodePosition(node.id);
-                let fill = 'white';
-                if (node.sorted) fill = 'var(--success-color)';
-                else if (node.swapping) fill = 'var(--highlight-primary)';
-                else if (node.comparing) fill = 'var(--warning-color)';
+                let fill = 'url(#white-gradient)';
+                if (node.sorted) fill = 'url(#sorted-gradient)';
+                else if (node.swapping) fill = 'url(#swapping-gradient)';
+                else if (node.comparing) fill = 'url(#comparing-gradient)';
+                
                 return (
-                    <g key={node.id} transform={`translate(${x},${y})`}>
-                        <circle cx="0" cy="0" r="20" fill={fill} stroke="var(--border-color)" strokeWidth="2" />
-                        <text x="0" y="5" textAnchor="middle" fill={node.sorted || node.swapping || node.comparing ? 'white' : 'black'} fontSize="16">{node.value}</text>
+                    <g key={node.id} transform={`translate(${x},${y})`} style={{ transition: 'transform 0.5s ease-in-out' }}>
+                        <defs>
+                            <linearGradient id="white-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style={{stopColor: '#f3f4f6'}} />
+                                <stop offset="100%" style={{stopColor: '#e5e7eb'}} />
+                            </linearGradient>
+                            <linearGradient id="sorted-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style={{stopColor: '#4ade80'}} />
+                                <stop offset="100%" style={{stopColor: '#3b82f6'}} />
+                            </linearGradient>
+                            <linearGradient id="swapping-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style={{stopColor: '#a78bfa'}} />
+                                <stop offset="100%" style={{stopColor: '#f472b6'}} />
+                            </linearGradient>
+                            <linearGradient id="comparing-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style={{stopColor: '#facc15'}} />
+                                <stop offset="100%" style={{stopColor: '#f97316'}} />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="0" cy="0" r="25" fill={fill} stroke="#94a3b8" strokeWidth="2" className="shadow-lg" />
+                        <text x="0" y="8" textAnchor="middle" fill={node.sorted || node.swapping || node.comparing ? 'white' : 'black'} fontSize="20" fontWeight="bold">{node.value}</text>
                     </g>
                 );
             })}
@@ -181,10 +224,12 @@ const HeapInteractive = () => {
                 <button onClick={() => { setOperation('heapify'); reset(); }} className={`px-4 py-2 retro-border ${operation === 'heapify' ? 'bg-var(--highlight-primary) text-white' : 'bg-white'}`}>Heapify</button>
                 <button onClick={() => { setOperation('sort'); reset(); }} className={`px-4 py-2 retro-border ${operation === 'sort' ? 'bg-var(--highlight-primary) text-white' : 'bg-white'}`}>Heap Sort</button>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
                 <div>
                     <h4 className="font-bold text-center uppercase mb-2">Tree Representation</h4>
-                    <HeapTree heap={currentArray} comparing={comparing} swapping={swapping} sorted={sorted} />
+                    <div className="overflow-x-auto">
+                        <HeapTree heap={currentArray} comparing={comparing} swapping={swapping} sorted={sorted} />
+                    </div>
                 </div>
                 <div>
                     <h4 className="font-bold text-center uppercase mb-2">Array Representation</h4>
