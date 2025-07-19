@@ -7,6 +7,7 @@ import { QueueContent } from './topics/queue';
 import { HashContent } from './topics/hash';
 import { BinarySearchContent } from './topics/binarySearch';
 import { BubbleSortContent } from './topics/bubbleSort';
+import { HeapContent } from './topics/heap';
 
 export const algorithmTopics = [
     {
@@ -125,5 +126,21 @@ export const algorithmTopics = [
             { id: 'disadvantages', title: 'Disadvantages' }
         ],
         content: (props) => <BubbleSortContent {...props} />
+    },
+    {
+        id: 'heap',
+        chapter: '2.3',
+        title: 'Heap',
+        tags: ['🌲 Tree-based', '🥇 Priority Queue'],
+        description: 'A specialized tree-based data structure that satisfies the heap property, useful for implementing priority queues.',
+        sections: [
+            { id: 'introduction', title: 'Introduction' },
+            { id: 'interactive-demo', title: 'Algorithm + Visualization' },
+            { id: 'key-operations', title: 'Key Operations' },
+            { id: 'complexity-analysis', title: 'Complexity Analysis' },
+            { id: 'use-cases', title: 'Applications' },
+            { id: 'disadvantages', title: 'Disadvantages' }
+        ],
+        content: (props) => <HeapContent {...props} />
     }
 ];
