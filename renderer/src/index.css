@@ -1,71 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Lato:wght@400;700&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    --background: 35 33% 96%;
-    --foreground: 0 0% 15%;
-    --card: 35 33% 96%;
-    --card-foreground: 0 0% 15%;
-    --popover: 35 33% 96%;
-    --popover-foreground: 0 0% 15%;
-    --primary: 210 30% 40%;
-    --primary-foreground: 35 33% 96%;
-    --secondary: 35 25% 92%;
-    --secondary-foreground: 0 0% 15%;
-    --muted: 35 25% 92%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 30 70% 60%;
-    --accent-foreground: 0 0% 15%;
-    --border: 210 20% 70%;
-    --input: 35 25% 92%;
-    --ring: 210 30% 40%;
-    --success: 140 60% 40%;
-    --warning: 30 80% 55%;
-    --danger: 0 70% 50%;
-  }
-
-  .dark {
-    --background: 220 15% 15%;
-    --foreground: 220 10% 85%;
-    --card: 220 15% 15%;
-    --card-foreground: 220 10% 85%;
-    --popover: 220 15% 15%;
-    --popover-foreground: 220 10% 85%;
-    --primary: 210 30% 70%;
-    --primary-foreground: 220 15% 15%;
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 220 10% 85%;
-    --muted: 220 15% 20%;
-    --muted-foreground: 220 10% 60%;
-    --accent: 30 60% 70%;
-    --accent-foreground: 220 15% 15%;
-    --border: 210 15% 30%;
-    --input: 220 15% 20%;
-    --ring: 210 30% 70%;
-    --success: 140 50% 50%;
-    --warning: 30 70% 60%;
-    --danger: 0 60% 60%;
-  }
-  
-  body {
-    @apply bg-background text-foreground font-sans;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+:root {
+    --bg-primary: #0D1117;
+    --bg-secondary: #161B22;
+    --text-primary: #C9D1D9;
+    --text-secondary: #8B949E;
+    --text-accent: #58A6FF;
+    --border-color: #30363D;
+    --highlight-primary: #F78166; /* Orange/Coral */
+    --highlight-secondary: #FFA657;
+    --highlight-code-bg: rgba(88, 166, 255, 0.15);
+    --success-color: #56D364;
+    --warning-color: #DBAB0A;
+    --danger-color: #F85149;
+    --shadow-color: rgba(0, 0, 0, 0.2);
 }
 
-@layer components {
-  .paper-card {
-    @apply bg-card p-6 rounded-sm shadow-md transition-shadow duration-300 hover:shadow-xl;
-  }
-  .btn-primary {
-    @apply bg-primary text-primary-foreground font-bold py-2 px-4 rounded-sm transition-transform transform hover:scale-105;
-  }
-  .btn-secondary {
-    @apply bg-secondary text-secondary-foreground font-bold py-2 px-4 rounded-sm transition-transform transform hover:scale-105;
-  }
-} 
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.font-serif {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.terminal-border {
+    border: 1px solid var(--border-color);
+}

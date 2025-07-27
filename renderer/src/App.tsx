@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
 import { HomePage } from './components/HomePage';
 import { TopicPage } from './components/TopicPage';
-import GlobalStyles from './components/GlobalStyles';
-import { ThemeProvider } from './theme';
+import { GlobalStyles } from './components/GlobalStyles';
 
 const App = () => {
+    const [selectedTopic, setSelectedTopic] = useState(null);
+    
     return (
-        <ThemeProvider>
+        <div>
             <GlobalStyles />
-            <MainContent />
-        </ThemeProvider>
+            {!selectedTopic 
+                ? <HomePage onSelectTopic={setSelectedTopic} />
+                : <TopicPage topic={selectedTopic} onBackToHome={() => setSelectedTopic(null)} />
+            }
+        </div>
     );
 };
-
-const MainContent = () => {
-    const [selectedTopic, setSelectedTopic] = useState(null);
-    return !selectedTopic 
-        ? <HomePage onSelectTopic={setSelectedTopic} />
-        : <TopicPage topic={selectedTopic} onBackToHome={() => setSelectedTopic(null)} />
-}
 
 export default App;

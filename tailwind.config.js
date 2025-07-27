@@ -7,57 +7,34 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'background': 'hsl(var(--background))',
-        'foreground': 'hsl(var(--foreground))',
-        'primary': 'hsl(var(--primary))',
-        'primary-foreground': 'hsl(var(--primary-foreground))',
-        'secondary': 'hsl(var(--secondary))',
-        'secondary-foreground': 'hsl(var(--secondary-foreground))',
-        'accent': 'hsl(var(--accent))',
-        'accent-foreground': 'hsl(var(--accent-foreground))',
-        'card': 'hsl(var(--card))',
-        'card-foreground': 'hsl(var(--card-foreground))',
-        'popover': 'hsl(var(--popover))',
-        'popover-foreground': 'hsl(var(--popover-foreground))',
-        'border': 'hsl(var(--border))',
-        'input': 'hsl(var(--input))',
-        'ring': 'hsl(var(--ring))',
-        'muted': 'hsl(var(--muted))',
-        'muted-foreground': 'hsl(var(--muted-foreground))',
-        'success': 'hsl(var(--success))',
-        'warning': 'hsl(var(--warning))',
-        'danger': 'hsl(var(--danger))',
+        'bg-primary': '#0D1117',
+        'bg-secondary': '#161B22',
+        'text-primary': '#C9D1D9',
+        'text-secondary': '#8B949E',
+        'text-accent': '#58A6FF',
+        'border-color': '#30363D',
+        'highlight-primary': '#F78166',
+        'highlight-secondary': '#FFA657',
+        'highlight-code-bg': 'rgba(88, 166, 255, 0.15)',
+        'success-color': '#56D364',
+        'warning-color': '#DBAB0A',
+        'danger-color': '#F85149',
       },
       fontFamily: {
-        sans: ['Lato', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
-        mono: ['Fira Code', 'monospace'],
+        sans: ['JetBrains Mono', 'monospace'],
+        serif: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out forwards',
-        'fade-in-up': 'fadeInUp 0.5s ease-in-out forwards',
-        'slide-up': 'slideUp 0.5s ease-out forwards',
-        'slide-down': 'slideDown 0.5s ease-out forwards',
+        'fade-in': 'fadeIn 0.5s ease-out',
       },
       keyframes: {
         fadeIn: {
           'from': { opacity: '0' },
           'to': { opacity: '1' },
         },
-        fadeInUp: {
-          'from': { opacity: '0', transform: 'translateY(10px)' },
-          'to': { opacity: '1', transform: 'translateY(0)' },
-        },
-        slideUp: {
-          'from': { transform: 'translateY(20px)', opacity: '0' },
-          'to': { transform: 'translateY(0)', opacity: '1' },
-        },
-        slideDown: {
-          'from': { transform: 'translateY(-20px)', opacity: '0' },
-          'to': { transform: 'translateY(0)', opacity: '1' },
-        }
       }
     },
   },
   plugins: [],
-} 
+}

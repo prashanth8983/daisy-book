@@ -2,16 +2,22 @@ import React, { useState, useMemo } from 'react';
 import { Lightbulb, Beaker, BarChart3, Target, AlertTriangle, Cpu } from 'lucide-react';
 import { SectionHeading, Prose, DefinitionBox, ComplexityBox, ApplicationsBox, DisadvantagesBox, RetroCodeBlock, Controls, EnhancedChart } from '../ui';
 
-const ArrayCell = ({ num, index, isAccessed, isNew, isDeleted }) => {
-    let cellClasses = 'w-16 h-16 flex items-center justify-center border-b-2 border-r-2 border-gray-400 text-2xl font-serif transition-all duration-500 ';
-    if (isDeleted) cellClasses += 'bg-danger text-white transform scale-0';
-    else if (isNew) cellClasses += 'bg-success text-white transform scale-110';
-    else if (isAccessed) cellClasses += 'bg-primary text-white';
-    else cellClasses += 'bg-card';
+const ArrayCell = ({ num, index, isAccessed, isNew, isDeleted }: { 
+    num: number; 
+    index: number; 
+    isAccessed: boolean; 
+    isNew: boolean; 
+    isDeleted: boolean; 
+}) => {
+    let cellClasses = 'w-16 h-16 flex items-center justify-center border-b-2 border-r-2 border-[var(--border-color)] text-2xl font-serif transition-all duration-500 ';
+    if (isDeleted) cellClasses += 'bg-[var(--danger-color)] text-white transform scale-0';
+    else if (isNew) cellClasses += 'bg-[var(--success-color)] text-white transform scale-110';
+    else if (isAccessed) cellClasses += 'bg-[var(--highlight-primary)] text-white';
+    else cellClasses += 'bg-[var(--bg-secondary)]';
 
     return (
-        <div className="flex flex-col items-center animate-fade-in-up">
-            <div className="text-sm text-muted-foreground h-6">{index}</div>
+        <div className="flex flex-col items-center animate-fadeIn">
+            <div className="text-sm text-[var(--text-secondary)] h-6">{index}</div>
             <div className={cellClasses}>{num}</div>
         </div>
     );
@@ -21,9 +27,9 @@ const ArrayInteractive = () => {
     const [array, setArray] = useState([10, 20, 30, 40, 50]);
     const [inputValue, setInputValue] = useState("");
     const [indexValue, setIndexValue] = useState("");
-    const [accessedIndex, setAccessedIndex] = useState(null);
-    const [newIndex, setNewIndex] = useState(null);
-    const [deletedIndex, setDeletedIndex] = useState(null);
+    const [accessedIndex, setAccessedIndex] = useState<number | null>(null);
+    const [newIndex, setNewIndex] = useState<number | null>(null);
+    const [deletedIndex, setDeletedIndex] = useState<number | null>(null);
     const [description, setDescription] = useState("An array is a collection of items stored at contiguous memory locations.");
 
     const handleInsert = () => {
@@ -71,10 +77,10 @@ const ArrayInteractive = () => {
     };
 
     return (
-        <div className="my-8 paper-card">
+        <div className="my-8 p-6 terminal-border bg-[var(--bg-secondary)]">
             <h3 className="font-bold text-lg uppercase mb-2">Visualization</h3>
-            <div className="p-4 bg-secondary rounded-sm shadow-inner">
-                <div className="flex justify-center border-l-2 border-t-2 border-gray-400 min-h-[100px]">
+            <div className="p-4 bg-[var(--bg-primary)] rounded-sm">
+                <div className="flex justify-center border-l-2 border-t-2 border-[var(--border-color)] min-h-[100px]">
                     {array.map((num, idx) => (
                         <ArrayCell 
                             key={`${idx}-${num}`} 
@@ -87,21 +93,47 @@ const ArrayInteractive = () => {
                     ))}
                 </div>
             </div>
-            <div className="mt-6 p-4 bg-secondary rounded-sm shadow-inner">
+            <div className="mt-6 p-4 bg-[var(--bg-primary)] rounded-sm">
                 <h3 className="font-bold text-lg uppercase mb-2">Operations</h3>
                 <div className="flex flex-wrap items-center gap-4">
-                    <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} placeholder="Value" className="w-24 bg-input p-2 rounded-sm" />
-                    <input type="text" value={indexValue} onChange={e => setIndexValue(e.target.value)} placeholder="Index" className="w-24 bg-input p-2 rounded-sm" />
-                    <button onClick={handleInsert} className="btn-primary">Insert</button>
-                    <button onClick={handleDelete} className="btn-secondary">Delete</button>
-                    <button onClick={handleAccess} className="btn-secondary">Access</button>
+                    <input 
+                        type="text" 
+                        value={inputValue} 
+                        onChange={e => setInputValue(e.target.value)} 
+                        placeholder="Value" 
+                        className="w-24 bg-[var(--bg-secondary)] p-2 rounded-sm border border-[var(--border-color)] text-[var(--text-primary)]" 
+                    />
+                    <input 
+                        type="text" 
+                        value={indexValue} 
+                        onChange={e => setIndexValue(e.target.value)} 
+                        placeholder="Index" 
+                        className="w-24 bg-[var(--bg-secondary)] p-2 rounded-sm border border-[var(--border-color)] text-[var(--text-primary)]" 
+                    />
+                    <button 
+                        onClick={handleInsert} 
+                        className="px-4 py-2 bg-[var(--highlight-primary)] text-white rounded-sm hover:bg-[var(--highlight-secondary)] transition-colors"
+                    >
+                        Insert
+                    </button>
+                    <button 
+                        onClick={handleDelete} 
+                        className="px-4 py-2 bg-[var(--danger-color)] text-white rounded-sm hover:opacity-80 transition-colors"
+                    >
+                        Delete
+                    </button>
+                    <button 
+                        onClick={handleAccess} 
+                        className="px-4 py-2 bg-[var(--success-color)] text-white rounded-sm hover:opacity-80 transition-colors"
+                    >
+                        Access
+                    </button>
                 </div>
-                 <p className="font-serif text-lg mt-4 text-muted-foreground">{description}</p>
+                 <p className="font-serif text-lg mt-4 text-[var(--text-secondary)]">{description}</p>
             </div>
         </div>
     );
 };
-
 
 export const ArrayContent = ({ topic }) => (
     <>
@@ -118,12 +150,14 @@ export const ArrayContent = ({ topic }) => (
         <ComplexityBox
             time={<ul className="list-disc pl-5"><li>Access: O(1)</li><li>Search: O(n)</li><li>Insertion: O(n)</li><li>Deletion: O(n)</li></ul>}
             space={<ul className="list-disc pl-5"><li>O(n)</li></ul>}
+            recurrence={null}
+            theorem={null}
         />
         <EnhancedChart 
             data={useMemo(() => Array.from({length: 21}, (_, i) => ({ n: i * 5, 'O(n)': i * 5, 'O(1)': 1 })), [])} 
             lines={[
-                { dataKey: 'O(n)', name: 'Search/Insert/Delete', color: 'hsl(var(--danger))' },
-                { dataKey: 'O(1)', name: 'Access', color: 'hsl(var(--success))' }
+                { dataKey: 'O(n)', name: 'Search/Insert/Delete', color: '#F85149' },
+                { dataKey: 'O(1)', name: 'Access', color: '#56D364' }
             ]} 
             title="Array Operations Complexity"
             subtitle="Time complexity growth for common operations"
@@ -142,4 +176,3 @@ export const ArrayContent = ({ topic }) => (
         ]}/>
     </>
 );
-""

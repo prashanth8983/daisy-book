@@ -1,25 +1,28 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useRef, createContext, useContext } from 'react';
+import { Play, Pause, RotateCcw, SkipBack, SkipForward, CheckCircle, XCircle, Beaker, BarChart3, ArrowLeft, ChevronsRight, Lightbulb, Code2, AlertTriangle, Menu, X, BookMarked, PenTool, Hash, Zap, Brain, Target, Cpu, ExternalLink, Minimize, ArrowDown, Sun, Moon } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { algorithmTopics } from './components/algorithmTopics';
+import { BinarySearchContent } from './components/topics/binarySearch';
+import { BubbleSortContent } from './components/topics/bubbleSort';
+import { ArrayContent } from './components/topics/array';
+import { ArrayContent } from './components/topics/array';
+import { ArrayContent } from './components/topics/array';
+import { GlobalStyles } from './components/GlobalStyles';
+import { HomePage } from './components/HomePage';
+import { TopicPage } from './components/TopicPage';
 
-export const ThemeContext = createContext();
+// --- Main App Component ---
 
-export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState('light');
-
-    useEffect(() => {
-        const root = window.document.documentElement;
-        root.classList.remove(theme === 'light' ? 'dark' : 'light');
-        root.classList.add(theme);
-    }, [theme]);
-
-    const toggleTheme = () => {
-        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-    };
+export const Theme = () => {
+    const [selectedTopic, setSelectedTopic] = useState(null);
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
-            {children}
-        </ThemeContext.Provider>
+        <div>
+            <GlobalStyles />
+            {!selectedTopic 
+                ? <HomePage onSelectTopic={setSelectedTopic} />
+                : <TopicPage topic={selectedTopic} onBackToHome={() => setSelectedTopic(null)} />
+            }
+        </div>
     );
 };
-
-export const useTheme = () => useContext(ThemeContext);
