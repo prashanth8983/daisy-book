@@ -1,6 +1,7 @@
 import React from 'react';
 
-export const GlobalStyles = () => (
+// --- Global Styles & Fonts ---
+const GlobalStyles = () => (
     <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
         
@@ -50,3 +51,5 @@ export const GlobalStyles = () => (
         }
     `}</style>
 );
+
+export default GlobalStyles;

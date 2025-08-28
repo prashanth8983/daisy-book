@@ -114,13 +114,13 @@ const BubbleSortInteractive = () => {
     return (
         <div className="my-8">
             <h3 className="font-bold text-lg uppercase mb-2">Visualization</h3>
-            <div className="p-4 retro-border bg-var(--bg-secondary)">
+            <div className="p-4 terminal-border bg-var(--bg-secondary)">
                 <p className="text-center text-sm mb-2 text-var(--text-accent)">Left-click to increase value, Right-click to decrease.</p>
                 <div className="flex justify-center border-l-2 border-t-2 border-gray-400">
                     {currentArray.map((num, idx) => <BubbleSortArrayCell key={`${idx}-${num}`} num={num} index={idx} onUpdate={handleArrayUpdate} isComparing={comparing.includes(idx)} isSwapping={swapping.includes(idx)} isSorted={sorted.includes(idx)} />)}
                 </div>
             </div>
-            <div className="mt-6 flex retro-border">
+            <div className="mt-6 flex terminal-border">
                 <div className="w-4/5">
                     <RetroCodeBlock title="Execution" highlightLines={[line]}>
                         {getCodeLines({ i, j })}
@@ -130,11 +130,11 @@ const BubbleSortInteractive = () => {
                     <StackCard variables={{ i, j }}/>
                 </div>
             </div>
-            <div className="mt-6 retro-border p-4 bg-var(--bg-secondary)">
+            <div className="mt-6 terminal-border p-4 bg-var(--bg-secondary)">
                 <h3 className="font-bold text-lg uppercase mb-2">Explanation</h3>
                 <p className="font-serif text-lg">{description}</p>
             </div>
-             <div className="retro-border mt-[-2px] border-t-0">
+             <div className="terminal-border mt-[-1px] border-t-0">
                 <Controls isPlaying={isPlaying} isFinished={isFinished} onPlayPause={() => setIsPlaying(!isPlaying)} onReset={reset} onStepBack={() => goToStep(currentStep - 1)} onStepForward={() => goToStep(currentStep + 1)} onSpeedChange={setSpeed} speed={speed} currentStep={currentStep} totalSteps={steps.length} />
             </div>
         </div>

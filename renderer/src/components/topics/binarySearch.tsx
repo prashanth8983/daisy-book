@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Lightbulb, Beaker, BarChart3, Target, AlertTriangle, Cpu, ArrowDown } from 'lucide-react';
+import { Lightbulb, Beaker, BarChart3, Target, AlertTriangle, Cpu, ArrowDown, BookMarked } from 'lucide-react';
 import { SectionHeading, Prose, DefinitionBox, ComplexityBox, ApplicationsBox, DisadvantagesBox, RetroCodeBlock, Controls, EnhancedChart } from '../ui';
 
 const BinarySearchVisualization = ({ array, left, right, mid, foundIndex, comparing, onUpdateArray }) => {
@@ -14,27 +14,27 @@ const BinarySearchVisualization = ({ array, left, right, mid, foundIndex, compar
         <div className="relative inline-flex flex-col items-center">
             <div className="flex pl-12">
                 {array.map((num, idx) => (
-                    <div key={idx} className="w-12 text-center text-sm text-var(--text-secondary)">{idx}</div>
+                    <div key={idx} className="w-12 text-center text-sm text-text-secondary">{idx}</div>
                 ))}
             </div>
             <div className="flex items-center">
                 <div className="flex flex-col items-center mr-2">
                     <ArrowDown size={16}/>
-                    <span className="font-serif text-2xl">arr:</span>
+                    <span className="text-2xl">arr:</span>
                 </div>
                 <div className="flex border-t-2 border-l-2 border-gray-400">
                     {array.map((num, idx) => {
-                        let cellClasses = 'w-12 h-12 flex items-center justify-center border-b-2 border-r-2 border-gray-400 text-2xl font-serif cursor-pointer ';
-                        if (idx === foundIndex) cellClasses += 'bg-var(--success-color) text-white';
-                        else if (idx === mid && comparing) cellClasses += 'bg-var(--warning-color) text-white';
-                        else cellClasses += 'bg-white';
+                        let cellClasses = 'w-12 h-12 flex items-center justify-center border-b-2 border-r-2 border-gray-400 text-2xl cursor-pointer ';
+                        if (idx === foundIndex) cellClasses += 'bg-[var(--success-color)] text-black';
+                        else if (idx === mid && comparing) cellClasses += 'bg-[var(--warning-color)] text-black';
+                        else cellClasses += 'bg-[var(--bg-secondary)]';
                         return <div key={`${idx}-${num}`} className={cellClasses} onClick={(e) => handleValueChange(e, idx, 1)} onContextMenu={(e) => handleValueChange(e, idx, -1)}>{num}</div>;
                     })}
                 </div>
             </div>
             <div className="relative h-6 w-full mt-1 pl-12">
-                {left !== null && <div className="absolute text-green-600 font-bold" style={{left: `${left * 48 + 24}px`, transform: 'translateX(-50%)'}}>L</div>}
-                {right !== null && <div className="absolute text-red-600 font-bold" style={{left: `${right * 48 + 24}px`, transform: 'translateX(-50%)'}}>R</div>}
+                {left !== null && <div className="absolute text-[var(--success-color)] font-bold" style={{left: `${left * 48 + 24}px`, transform: 'translateX(-50%)'}}>L</div>}
+                {right !== null && <div className="absolute text-[var(--danger-color)] font-bold" style={{left: `${right * 48 + 24}px`, transform: 'translateX(-50%)'}}>R</div>}
             </div>
         </div>
     );
@@ -108,7 +108,7 @@ const BinarySearchInteractive = () => {
 
     const StackCard = ({ variables }) => (
         <div className="bg-var(--bg-primary) h-full">
-            <div className="flex items-center justify-between p-2 border-b-2 border-var(--border-color)">
+            <div className="flex items-center justify-between p-2 border-b border-border-color bg-bg-secondary">
                 <span className="font-bold uppercase flex items-center gap-2"><Cpu size={16}/> Stack Card</span>
             </div>
             <div className="p-4 space-y-1 text-sm">
@@ -122,29 +122,32 @@ const BinarySearchInteractive = () => {
     
     return (
         <div className="my-8">
-            <div className="p-4 retro-border bg-var(--bg-secondary) flex justify-between items-end">
+            <div className="p-4 terminal-border bg-var(--bg-secondary) flex justify-between items-end">
                 <div className="overflow-x-auto">
                     <BinarySearchVisualization array={array} left={left} right={right} mid={mid} foundIndex={foundIndex} comparing={comparing} onUpdateArray={setArray} />
                 </div>
                 <div className="text-right ml-8">
                     <label className="block text-sm font-bold uppercase tracking-wide mb-1">Target Value</label>
-                    <input type="text" value={targetInput} onChange={e => setTargetInput(e.target.value)} onBlur={() => { setTarget(Number(targetInput)); reset(); }} className="w-32 bg-var(--bg-primary) retro-border p-2 font-mono text-sm text-center" placeholder="Target..." />
+                    <input type="text" value={targetInput} onChange={e => setTargetInput(e.target.value)} onBlur={() => { setTarget(Number(targetInput)); reset(); }} className="w-32 bg-var(--bg-primary) terminal-border p-2 text-sm text-center" placeholder="Target..." />
                 </div>
             </div>
             
-            <div className="mt-6 flex retro-border">
+            <div className="mt-6 flex terminal-border">
                 <div className="w-4/5">
                     <RetroCodeBlock title="Execution" highlightLines={[line]}>{getCodeLines({left, right, mid, target})}</RetroCodeBlock>
                 </div>
-                <div className="w-1/5 border-l-2 border-var(--border-color)">
+                <div className="w-1/5 border-l-2 border-[var(--border-color)]">
                     <StackCard variables={{left, right, mid, target}}/>
                 </div>
             </div>
-             <div className="retro-border mt-[-2px] border-t-0">
+             <div className="terminal-border mt-[-1px] border-t-0">
                 <Controls isPlaying={isPlaying} isFinished={isFinished} onPlayPause={() => setIsPlaying(!isPlaying)} onReset={reset} onStepBack={() => goToStep(currentStep - 1)} onStepForward={() => goToStep(currentStep + 1)} onSpeedChange={setSpeed} speed={speed} currentStep={currentStep} totalSteps={steps.length} />
             </div>
-            <div className="mt-6 retro-border p-4 bg-var(--bg-secondary)">
-                <h3 className="font-bold text-lg uppercase mb-2">Explanation</h3>
+            <div className="mt-6 terminal-border p-4 bg-var(--bg-secondary)">
+                <h3 className="font-bold text-xl mb-2 flex items-center gap-3">
+                    <BookMarked className="w-6 h-6 text-highlight-primary" />
+                    Explanation
+                </h3>
                 <p className="font-serif text-lg">{description}</p>
             </div>
         </div>
@@ -171,7 +174,7 @@ export const BinarySearchContent = ({ topic }) => (
         />
         <EnhancedChart 
             data={useMemo(() => Array.from({length: 51}, (_, i) => ({ n: i * 20, 'Linear O(n)': i * 20, 'Binary O(log n)': i * 20 > 0 ? Math.log2(i * 20) : 0 })), [])}
-            lines={[ { dataKey: 'Linear O(n)', name: 'Linear Search', color: '#DC2626' }, { dataKey: 'Binary O(log n)', name: 'Binary Search', color: 'var(--success-color)' } ]}
+            lines={[ { dataKey: 'Linear O(n)', name: 'Linear Search', color: '#DC2626' }, { dataKey: 'Binary O(log n)', name: 'Binary Search', color: 'success-color' } ]}
             title="Search Algorithm Comparison" subtitle="Time complexity growth: Linear vs. Logarithmic" inputLabel="Array Size (n)"
         />
         <SectionHeading title="Applications" id="use-cases" icon={Target} />

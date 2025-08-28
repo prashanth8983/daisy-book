@@ -1,13 +1,13 @@
 import React from 'react';
-import { BookMarked, Brain, Target, AlertTriangle, Code2, RotateCcw, SkipBack, Play, Pause, SkipForward, ChevronsRight, Moon, Sun, Cpu, ArrowDown } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Play, Pause, RotateCcw, SkipBack, SkipForward, CheckCircle, XCircle, Beaker, BarChart3, ArrowLeft, ChevronsRight, Lightbulb, Code2, AlertTriangle, Menu, X, BookMarked, PenTool, Hash, Zap, Brain, Target, Cpu, ExternalLink, Minimize, ArrowDown, Sun, Moon } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
 // --- Reusable UI Components ---
 
 export const SectionHeading = ({ title, id, icon: Icon }) => (
   <div id={id} className="pt-16 mb-6">
     <div className="flex items-center gap-4">
-        {Icon && <Icon className="w-8 h-8 text-[var(--highlight-primary)]" />}
+        {Icon && <Icon className="w-8 h-8 text-var(--highlight-primary)" />}
         <h2 className="text-3xl font-bold uppercase tracking-widest text-[var(--highlight-primary)]">{title}</h2>
     </div>
   </div>
@@ -50,7 +50,7 @@ export const ComplexityBox = ({ time, space, recurrence, theorem }) => (
         {recurrence && (
             <div className="mt-4">
                  <h4 className="font-bold">Recurrence Relation</h4>
-                 <p className="text-lg bg-[var(--bg-primary)] p-2 terminal-border mt-2 inline-block">{recurrence}</p>
+                 <p className="text-lg bg-var(--bg-primary) p-2 terminal-border mt-2 inline-block">{recurrence}</p>
             </div>
         )}
         {theorem && (
@@ -86,12 +86,13 @@ export const DisadvantagesBox = ({ items }) => (
     </div>
 );
 
+
 export const RetroCodeBlock = ({ children, title = "Algorithm", language = "python", highlightLines = [] }) => {
     return (
-        <div className="bg-[var(--bg-primary)] h-full terminal-border">
-            <div className="flex items-center justify-between p-2 border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
+        <div className="bg-var(--bg-primary) h-full terminal-border">
+            <div className="flex items-center justify-between p-2 border-b border-var(--border-color) bg-[var(--bg-secondary)]">
                 <span className="font-bold uppercase flex items-center gap-2"><Code2 size={16}/> {title}</span>
-                <span className="text-sm text-[var(--text-accent)]">{language}</span>
+                <span className="text-sm text-var(--text-accent)">{language}</span>
             </div>
             <div className="p-4 text-sm overflow-x-auto">
                 <pre className="leading-relaxed">
@@ -99,10 +100,10 @@ export const RetroCodeBlock = ({ children, title = "Algorithm", language = "pyth
                         const isHighlighted = highlightLines.includes(index + 1);
                         return (
                             <div key={index} className={`flex -mx-4 px-4 ${isHighlighted ? 'bg-[var(--highlight-code-bg)]' : ''}`}>
-                                <span className={`inline-block w-8 text-right mr-4 select-none ${isHighlighted ? 'text-[var(--text-accent)]' : 'text-[var(--text-accent)]'}`}>
+                                <span className={`inline-block w-8 text-right mr-4 select-none ${isHighlighted ? 'text-[var(--text-accent)]' : 'text-var(--text-accent)'}`}>
                                     {index + 1}
                                 </span>
-                                <span className={`${isHighlighted ? 'text-[var(--text-primary)]' : 'text-[var(--text-primary)]'}`}>{line}</span>
+                                <span className={`${isHighlighted ? 'text-[var(--text-primary)]' : 'text-var(--text-primary)]'}`}>{line}</span>
                             </div>
                         );
                     })}
@@ -126,10 +127,10 @@ export const Controls = ({ isPlaying, isFinished, onPlayPause, onReset, onStepBa
             </div>
             <div className="flex items-center gap-3">
                 <label className="text-sm font-bold uppercase">Speed</label>
-                <input type="range" min="250" max="2500" value={2750 - speed} onChange={(e) => onSpeedChange(2750 - parseInt(e.target.value))} className="w-32 h-1 bg-[var(--border-color)] appearance-none cursor-pointer accent-[var(--success-color)]"/>
+                <input type="range" min="250" max="2500" value={2750 - speed} onChange={(e) => onSpeedChange(2750 - parseInt(e.target.value))} className="w-32 h-1 bg-var(--border-color) appearance-none cursor-pointer accent-[var(--success-color)]"/>
             </div>
         </div>
-        <div className="mt-4 h-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] p-0.5">
+        <div className="mt-4 h-2 bg-var(--bg-secondary) border border-var(--border-color) p-0.5">
             <div className="h-full bg-[var(--success-color)] transition-all duration-300" style={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }} />
         </div>
     </div>
@@ -139,7 +140,7 @@ export const EnhancedChart = ({ data, lines, title, subtitle, inputLabel }) => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="terminal-border p-3 bg-[var(--bg-primary)] shadow-lg">
+                <div className="terminal-border p-3 bg-var(--bg-primary) shadow-lg">
                     <p className="font-bold text-sm">{`${inputLabel}: ${label}`}</p>
                     {payload.map((p, i) => (
                         <p key={i} className="text-sm" style={{color: p.color}}>{`${p.name}: ${p.value.toFixed(2)} ops`}</p>
@@ -154,7 +155,7 @@ export const EnhancedChart = ({ data, lines, title, subtitle, inputLabel }) => {
         <div className="my-6 terminal-border p-6 animate-fadeIn">
             <div className="mb-4">
                 <h3 className="text-2xl font-bold">{title}</h3>
-                <p className="text-[var(--text-secondary)]">{subtitle}</p>
+                <p className="text-var(--text-secondary)">{subtitle}</p>
             </div>
             <div className="h-96">
                 <ResponsiveContainer width="100%" height="100%">
