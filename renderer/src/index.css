@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+    --bg-primary: #c0c0c0; /* System Gray */
+    --bg-secondary: #ffffff; /* White */
+    --text-primary: #000000; /* Black */
+    --border-color: #000000; /* Black */
+    --highlight-primary: #000000; /* Black for selection */
+    --highlight-text: #ffffff; /* White for selection text */
+    --highlight-code-bg: rgba(0, 0, 0, 0.1);
+    --success-color: #228B22; 
+    --warning-color: #DAA520;
+    --danger-color: #8B0000;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.6;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.font-mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-in forwards;
+}
+
+.win1-button {
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 5px 10px;
+    transition: none;
+    text-align: center;
+    cursor: pointer;
+}
+.win1-button:hover {
+    cursor: pointer;
+}
+.win1-button:active, .win1-button.active {
+    background-color: var(--highlight-primary);
+    color: var(--highlight-text);
+}
+.win1-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.win1-window {
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-secondary);
+}
+
+.win1-titlebar {
+    background-color: var(--highlight-primary);
+    color: var(--highlight-text);
+    padding: 3px 6px;
+    font-weight: normal;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.win1-inset {
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-secondary);
+}
+
+/* Custom Range Slider */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 150px;
+    background: transparent;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 2px solid var(--border-color);
+    height: 20px;
+    width: 10px;
+    background: var(--bg-primary);
+    cursor: pointer;
+    margin-top: -8px;
+}
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+}
+input[type=range]::-moz-range-thumb {
+    border: 2px solid var(--border-color);
+    height: 20px;
+    width: 10px;
+    background: var(--bg-primary);
+    cursor: pointer;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#root {
+    width: 100%;
+    height: 100vh;
+}
