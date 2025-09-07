@@ -1,6 +1,6 @@
 import React from 'react';
 import { ControlsProps } from '../../types';
-import { IconPlay, IconPause, IconReset, IconSkipBack, IconSkipForward } from './icons';
+import { TbPlayerPlay, TbPlayerPause, TbArrowBack, TbArrowLeft, TbArrowRight } from 'react-icons/tb';
 
 export const Controls: React.FC<ControlsProps> = ({ 
     isPlaying, 
@@ -16,32 +16,32 @@ export const Controls: React.FC<ControlsProps> = ({
     <div className="mt-4 animate-fadeIn">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-                <button onClick={onReset} className="p-2 win1-button" title="Reset">
-                    <IconReset className="w-5 h-5" />
+                <button onClick={onReset} className="w-12 h-12 win1-button flex items-center justify-center" title="Reset">
+                    <TbArrowBack className="w-5 h-5" />
                 </button>
                 <button 
                     onClick={onStepBack} 
                     disabled={currentStep === 0} 
-                    className="p-2 win1-button disabled:opacity-50" 
+                    className="w-12 h-12 win1-button flex items-center justify-center disabled:opacity-50" 
                     title="Previous Step"
                 >
-                    <IconSkipBack className="w-5 h-5" />
+                    <TbArrowLeft className="w-5 h-5" />
                 </button>
                 <button 
                     onClick={onPlayPause} 
-                    className="px-4 py-2 win1-button flex items-center gap-2 disabled:opacity-50" 
+                    className="px-6 py-3 h-12 win1-button flex items-center justify-center gap-2 disabled:opacity-50 min-w-[120px]" 
                     disabled={isFinished}
                 >
-                    {isPlaying ? <IconPause className="w-5 h-5" /> : <IconPlay className="w-5 h-5" />}
-                    <span>{isPlaying ? 'PAUSE' : 'PLAY'}</span>
+                    {isPlaying ? <TbPlayerPause className="w-5 h-5" /> : <TbPlayerPlay className="w-5 h-5" />}
+                    <span className="font-medium">{isPlaying ? 'PAUSE' : 'PLAY'}</span>
                 </button>
                 <button 
                     onClick={onStepForward} 
                     disabled={isFinished} 
-                    className="p-2 win1-button disabled:opacity-50" 
+                    className="w-12 h-12 win1-button flex items-center justify-center disabled:opacity-50" 
                     title="Next Step"
                 >
-                    <IconSkipForward className="w-5 h-5" />
+                    <TbArrowRight className="w-5 h-5" />
                 </button>
             </div>
             <div className="flex items-center gap-3">
