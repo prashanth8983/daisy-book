@@ -35,189 +35,54 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
-const fs = __importStar(require("fs"));
-let mainWindow = null;
-const isDev = process.env['NODE_ENV'] === 'development';
+const isDev = !electron_1.app.isPackaged;
 function createWindow() {
-    mainWindow = new electron_1.BrowserWindow({
-        width: 1200,
-        height: 800,
+    const mainWindow = new electron_1.BrowserWindow({
+        height: 900,
+        width: 1400,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
         },
-        show: false
+        icon: path.join(__dirname, '../assets/icon.png'), // Optional: Add app icon
+        show: false, // Don't show until ready-to-show
     });
-    if (!isDev) {
-        mainWindow.webContents.on('context-menu', (e) => e.preventDefault());
-        mainWindow.webContents.on('before-input-event', (event, input) => {
-            if (input.key === 'F12' ||
-                (input.control && input.shift && input.key.toLowerCase() === 'i') ||
-                (input.meta && input.alt && input.key.toLowerCase() === 'i')) {
-                event.preventDefault();
-            }
-        });
-    }
+    // Load the appropriate URL based on environment
     if (isDev) {
-        mainWindow.loadURL('http://localhost:5173');
-        mainWindow.webContents.openDevTools();
+        mainWindow.loadURL('http://localhost:3000');
+        mainWindow.webContents.openDevTools(); // Open DevTools in development
     }
     else {
-        mainWindow.loadFile(path.join(__dirname, '../renderer/dist/index.html'));
+        mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
     }
+    // Show window when ready to prevent visual flash
     mainWindow.once('ready-to-show', () => {
-        mainWindow?.show();
+        mainWindow.show();
     });
+    // Handle window closed
     mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
-    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-        electron_1.shell.openExternal(url);
-        return { action: 'deny' };
+        // Dereference the window object
     });
 }
-electron_1.app.whenReady().then(() => {
-    createWindow();
-    electron_1.app.on('activate', () => {
-        if (electron_1.BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
-});
+electron_1.app.whenReady().then(createWindow);
+// Quit when all windows are closed, except on macOS
 electron_1.app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         electron_1.app.quit();
     }
 });
-electron_1.app.on('web-contents-created', (_event, contents) => {
+electron_1.app.on('activate', () => {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open
+    if (electron_1.BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
+});
+// Security: Prevent new window creation
+electron_1.app.on('web-contents-created', (event, contents) => {
     contents.setWindowOpenHandler(({ url }) => {
-        electron_1.shell.openExternal(url);
+        // Prevent opening new windows
         return { action: 'deny' };
     });
 });
-function createMenu() {
-    const template = [
-        {
-            label: 'File',
-            submenu: [
-                {
-                    label: 'New',
-                    accelerator: 'CmdOrCtrl+N',
-                    click: () => {
-                    }
-                },
-                { type: 'separator' },
-                {
-                    label: 'Quit',
-                    accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
-                    click: () => {
-                        electron_1.app.quit();
-                    }
-                }
-            ]
-        },
-        {
-            label: 'Edit',
-            submenu: [
-                { role: 'undo' },
-                { role: 'redo' },
-                { type: 'separator' },
-                { role: 'cut' },
-                { role: 'copy' },
-                { role: 'paste' }
-            ]
-        },
-        {
-            label: 'View',
-            submenu: [
-                { role: 'reload' },
-                { role: 'forceReload' },
-                { role: 'toggleDevTools' },
-                { type: 'separator' },
-                { role: 'resetZoom' },
-                { role: 'zoomIn' },
-                { role: 'zoomOut' },
-                { type: 'separator' },
-                { role: 'togglefullscreen' }
-            ]
-        },
-        {
-            label: 'Window',
-            submenu: [
-                { role: 'minimize' },
-                { role: 'close' }
-            ]
-        }
-    ];
-    if (process.platform === 'darwin') {
-        template.unshift({
-            label: electron_1.app.getName(),
-            submenu: [
-                { role: 'about' },
-                { type: 'separator' },
-                { role: 'services' },
-                { type: 'separator' },
-                { role: 'hide' },
-                { role: 'hideOthers' },
-                { role: 'unhide' },
-                { type: 'separator' },
-                { role: 'quit' }
-            ]
-        });
-    }
-    const menu = electron_1.Menu.buildFromTemplate(template);
-    electron_1.Menu.setApplicationMenu(menu);
-}
-electron_1.ipcMain.handle('get-version', () => {
-    return electron_1.app.getVersion();
-});
-electron_1.ipcMain.handle('dialog:openFile', async () => {
-    const result = await electron_1.dialog.showOpenDialog(mainWindow, {
-        properties: ['openFile'],
-        filters: [
-            { name: 'Text Files', extensions: ['txt'] },
-            { name: 'All Files', extensions: ['*'] }
-        ]
-    });
-    if (!result.canceled && result.filePaths.length > 0) {
-        try {
-            const filePath = result.filePaths[0];
-            if (filePath) {
-                const content = fs.readFileSync(filePath, 'utf8');
-                return content;
-            }
-        }
-        catch (error) {
-            console.error('Error reading file:', error);
-            return undefined;
-        }
-    }
-    return undefined;
-});
-electron_1.ipcMain.handle('dialog:saveFile', async (_event, content) => {
-    const result = await electron_1.dialog.showSaveDialog(mainWindow, {
-        filters: [
-            { name: 'Text Files', extensions: ['txt'] },
-            { name: 'All Files', extensions: ['*'] }
-        ]
-    });
-    if (!result.canceled && result.filePath) {
-        try {
-            fs.writeFileSync(result.filePath, content, 'utf8');
-            return result.filePath;
-        }
-        catch (error) {
-            console.error('Error writing file:', error);
-            return undefined;
-        }
-    }
-    return undefined;
-});
-electron_1.ipcMain.on('message', (_event, message) => {
-    console.log('Received message from renderer:', message);
-    mainWindow?.webContents.send('message', `Echo: ${message}`);
-});
-electron_1.app.setName('Daisy Book');
-electron_1.app.whenReady().then(createMenu);
-//# sourceMappingURL=main.js.map
